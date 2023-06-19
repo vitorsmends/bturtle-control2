@@ -45,3 +45,7 @@ margin(Gc*G)
 step(feedback(Gl,1))
 hold on
 step(feedback(Gl*Gc,1))
+
+%% Discretizacao em Z^-1
+tfz = c2d(Gc*k, 1/200)
+tfz = filt(tfz.Numerator, tfz.Denominator, 1/200)
