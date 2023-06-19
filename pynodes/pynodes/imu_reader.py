@@ -13,7 +13,7 @@ class ImuCustomNode(Node):
         super().__init__('imu_custom_node')
         #self.publisherAngle = self.create_publisher(std_msgs.msg.Float32, '/rotation_angle', 10)
         self.publisherController = self.create_publisher(geometry_msgs.msg.Twist, '/cmd_vel', 10)
-        timer_period = 0.05  # seconds (1/20hz = 0.05s)
+        timer_period = 0.005  # seconds (1/200hz = 0.005s)
         self.timer = self.create_timer(timer_period, self.publish_callback)
         self.i = 0
 
@@ -26,6 +26,13 @@ class ImuCustomNode(Node):
         self.quaternion=[0,0,0,0] # inicializa com valores arbitrarios
         self.euler=[0,0,0]
 
+        self.vel_0 = 0
+        self.vel_1 = 0
+        self.vel_2 = 0
+
+        self.ang_1=0
+        self.ang_2=0
+
 
     def listener_callback(self, data):
         """
@@ -33,26 +40,30 @@ class ImuCustomNode(Node):
         """
         self.quaternion=[data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
         self.euler = self.euler_from_quaternion(data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w)
+
         
 
     def publish_callback(self):
         """
         Publish the data
         """
-        # value = std_msgs.msg.Float32()
-        # value.data = self.euler[0]
-        # self.publisherAngle(value)
+        self.ang_1=0-self.euler
+        vel_0 = 1.419*vel_1 -0.4168*vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
+        
 
         velocity = geometry_msgs.msg.Twist()
-        #velocity.linear.x=1
+        velocity.linear.x=1.0
 
         #print(f'Angle = {self.euler[0]}')
         #print(velocity)
-        print(self.euler)
+        # print(self.euler)
 
         # TO DO: calcular controlador
-        #self.publisherController.publish()
-        
+        self.publisherController.publish(velocity)
+
+        vel_1 = vel_0
+        vel_2 = vel_1
+        self.ang_2=self.ang_1
 
 
     def euler_from_quaternion(self, x, y, z, w):
