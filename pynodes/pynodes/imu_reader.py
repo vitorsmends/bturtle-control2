@@ -47,12 +47,12 @@ class ImuCustomNode(Node):
         """
         Publish the data
         """
-        self.ang_1=0-self.euler
-        vel_0 = 1.419*vel_1 -0.4168*vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
+        self.ang_1=0-self.euler[0]
+        self.vel_0 = 1.419*self.vel_1 -0.4168*self.vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
         
 
         velocity = geometry_msgs.msg.Twist()
-        velocity.linear.x=1.0
+        velocity.linear.x=self.vel_0
 
         #print(f'Angle = {self.euler[0]}')
         #print(velocity)
@@ -61,8 +61,8 @@ class ImuCustomNode(Node):
         # TO DO: calcular controlador
         self.publisherController.publish(velocity)
 
-        vel_1 = vel_0
-        vel_2 = vel_1
+        self.vel_1 = self.vel_0
+        self.vel_2 = self.vel_1
         self.ang_2=self.ang_1
 
 
