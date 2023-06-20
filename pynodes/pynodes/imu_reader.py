@@ -34,9 +34,9 @@ class ImuCustomNode(Node):
         self.ang_1=0
         self.ang_2=0
 
-        self.kp=
-        self.ki=
-        self.kd=0
+        self.kp= -0.019211
+        self.ki= -0.00056694
+        self.kd= -0.013406
         self.ts=0.005   # periodo de amostragem
 
         self.erro_0=0
