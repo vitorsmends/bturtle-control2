@@ -34,6 +34,15 @@ class ImuCustomNode(Node):
         self.ang_1=0
         self.ang_2=0
 
+        self.kp=
+        self.ki=
+        self.kd=0
+        self.ts=0.005   # periodo de amostragem
+
+        self.erro_0=0
+        self.erro_1=0
+        self.erro_sum=0
+
 
     def listener_callback(self, data):
         """
@@ -48,11 +57,16 @@ class ImuCustomNode(Node):
         """
         Publish the data
         """
+        self.erro_0=0+self.euler[0]
         self.ang_1=0+self.euler[0]
-        self.vel_0 = 1.419*self.vel_1 -0.4168*self.vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
+        self.erro_sum += self.erro_0
+
+        # self.vel_0 = 1.419*self.vel_1 -0.4168*self.vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
+        self.vel_0 = (self.kp*self.erro_0) + (self.ki*self.erro_sum) + (self.kd*(self.erro_0-self.erro_1)/self.ts)
+        print(self.vel_0)
         # sel.vel_0=0.01*self.euler[0]
 
-        self.vel_0 = self.vel_0/5
+        # self.vel_0 = self.vel_0/5
 
         # limite de saturacao do motor
         if self.vel_0 > self.max_vel:
@@ -69,12 +83,14 @@ class ImuCustomNode(Node):
         # print(self.euler)
 
         # TO DO: calcular controlador
-        print(self.vel_0)
+        
         self.publisherController.publish(velocity)
 
         self.vel_1 = self.vel_0
         self.vel_2 = self.vel_1
         self.ang_2=self.ang_1
+
+        self.erro_1=self.erro_0
 
 
     def euler_from_quaternion(self, x, y, z, w):
