@@ -52,7 +52,7 @@ class ImuCustomNode(Node):
         
 
         velocity = geometry_msgs.msg.Twist()
-        velocity.linear.x=self.vel_0
+        velocity.linear.x=0.05
 
         #print(f'Angle = {self.euler[0]}')
         #print(velocity)
