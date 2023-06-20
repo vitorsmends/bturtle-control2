@@ -50,7 +50,9 @@ class ImuCustomNode(Node):
         """
         self.ang_1=0+self.euler[0]
         self.vel_0 = 1.419*self.vel_1 -0.4168*self.vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
-        self.vel_0 = self.vel_0/100
+        # sel.vel_0=0.01*self.euler[0]
+
+        self.vel_0 = self.vel_0/5
 
         # limite de saturacao do motor
         if self.vel_0 > self.max_vel:
@@ -67,7 +69,7 @@ class ImuCustomNode(Node):
         # print(self.euler)
 
         # TO DO: calcular controlador
-        print(velocity)
+        print(self.vel_0)
         self.publisherController.publish(velocity)
 
         self.vel_1 = self.vel_0
