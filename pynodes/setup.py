@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'imu_reader = pynodes.imu_reader:main',
+            'imu_pid = pynodes.imu_pid:main',
             'bag_record = pynodes.bag_record:main',
         ],
     },
