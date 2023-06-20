@@ -123,16 +123,16 @@ def main(args=None):
 
     imu_node = ImuCustomNode()
 
-    print("calibrating IMU offset")
-    count=0
-    while(imu_node.euler[0] == 0):
-        if(count>=1000):
-            print("calibrating IMU FAILED")
-            imu_node.destroy_node()
-            rclpy.shutdown()
-        imu_node.imu_offset=imu_node.euler[0]
-        count+=1
-    print(f'\nApplying IMU offset of {imu_node.imu_offset}\n')
+    # print("calibrating IMU offset")
+    # count=0
+    # while(imu_node.euler[0] == 0):
+    #     if(count>=1000):
+    #         print("calibrating IMU FAILED")
+    #         imu_node.destroy_node()
+    #         rclpy.shutdown()
+    #     imu_node.imu_offset=imu_node.euler[0]
+    #     count+=1
+    # print(f'\nApplying IMU offset of {imu_node.imu_offset}\n')
 
     rclpy.spin(imu_node)
 
