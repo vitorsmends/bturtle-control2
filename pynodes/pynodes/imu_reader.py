@@ -16,6 +16,7 @@ class ImuCustomNode(Node):
         timer_period = 0.005  # seconds (1/200hz = 0.005s)
         self.timer = self.create_timer(timer_period, self.publish_callback)
         self.i = 0
+        self.max_vel=0.2
 
         self.subscription = self.create_subscription(
           sensor_msgs.msg.Imu, 
@@ -47,15 +48,16 @@ class ImuCustomNode(Node):
         """
         Publish the data
         """
-        self.ang_1=0-self.euler[0]
+        self.ang_1=0+self.euler[0]
         self.vel_0 = 1.419*self.vel_1 -0.4168*self.vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
+        self.vel_0 = self.vel_0/100
 
         # limite de saturacao do motor
-        if self.vel_0 > 0.2:
-            self.vel_0=0.2
+        if self.vel_0 > self.max_vel:
+            self.vel_0=self.max_vel
         
-        if self.vel_0 < -0.2:
-            self.vel_0=-0.2
+        if self.vel_0 < -self.max_vel:
+            self.vel_0=-self.max_vel
 
         velocity = geometry_msgs.msg.Twist()
         velocity.linear.x=self.vel_0
