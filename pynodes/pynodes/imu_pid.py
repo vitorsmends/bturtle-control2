@@ -7,7 +7,7 @@ import geometry_msgs.msg
 import math, time
 
 
-class ImuCustomNode(Node):
+class ImuPidNode(Node):
 
     def __init__(self):
         super().__init__('imu_custom_node')
@@ -31,6 +31,7 @@ class ImuCustomNode(Node):
         self.vel_1 = 0
         self.vel_2 = 0
 
+        self.ang_0=0
         self.ang_1=0
         self.ang_2=0
 
@@ -102,7 +103,7 @@ def main(args=None):
     print("Creating node ...")
     rclpy.init(args=args)
 
-    imu_node = ImuCustomNode()
+    imu_node = ImuPidNode()
 
     rclpy.spin(imu_node)
 
