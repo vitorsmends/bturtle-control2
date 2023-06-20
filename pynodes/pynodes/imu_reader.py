@@ -49,10 +49,14 @@ class ImuCustomNode(Node):
         """
         self.ang_1=0-self.euler[0]
         self.vel_0 = 1.419*self.vel_1 -0.4168*self.vel_2 +0.6072*self.ang_1 -0.5486*self.ang_2
+
+        # limite de saturacao do motor
+        if self.vel_0 > 0.2:
+            self.vel_0=0.2
         
 
         velocity = geometry_msgs.msg.Twist()
-        velocity.linear.x=5
+        velocity.linear.x=self.vel_0
 
         #print(f'Angle = {self.euler[0]}')
         #print(velocity)
