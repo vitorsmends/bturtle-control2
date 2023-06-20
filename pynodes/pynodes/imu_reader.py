@@ -16,7 +16,7 @@ class ImuCustomNode(Node):
         timer_period = 0.005  # seconds (1/200hz = 0.005s)
         self.timer = self.create_timer(timer_period, self.publish_callback)
         self.i = 0
-        self.max_vel=0.2
+        self.max_vel=0.1
 
         self.subscription = self.create_subscription(
           sensor_msgs.msg.Imu, 
@@ -67,6 +67,7 @@ class ImuCustomNode(Node):
         # print(self.euler)
 
         # TO DO: calcular controlador
+        print(velocity)
         self.publisherController.publish(velocity)
 
         self.vel_1 = self.vel_0
