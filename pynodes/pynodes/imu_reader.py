@@ -52,7 +52,7 @@ class ImuCustomNode(Node):
         
 
         velocity = geometry_msgs.msg.Twist()
-        velocity.linear.x=0.05
+        velocity.linear.x=5
 
         #print(f'Angle = {self.euler[0]}')
         #print(velocity)
@@ -90,6 +90,7 @@ class ImuCustomNode(Node):
 
 
 def main(args=None):
+    print("Creating node ...")
     rclpy.init(args=args)
 
     imu_node = ImuCustomNode()
