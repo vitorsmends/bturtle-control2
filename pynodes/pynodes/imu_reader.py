@@ -54,6 +54,8 @@ class ImuCustomNode(Node):
         if self.vel_0 > 0.2:
             self.vel_0=0.2
         
+        if self.vel_0 < -0.2:
+            self.vel_0=-0.2
 
         velocity = geometry_msgs.msg.Twist()
         velocity.linear.x=self.vel_0
