@@ -16,7 +16,7 @@ class ImuCustomNode(Node):
         timer_period = 0.005  # seconds (1/200hz = 0.005s)
         self.timer = self.create_timer(timer_period, self.publish_callback)
         self.i = 0
-        self.max_vel=0.1
+        self.max_vel=0.2
 
         self.subscription = self.create_subscription(
           sensor_msgs.msg.Imu, 
@@ -26,6 +26,7 @@ class ImuCustomNode(Node):
         self.subscription # prevent unused variable warning
         self.quaternion=[0,0,0,0] # inicializa com valores arbitrarios
         self.euler=[0,0,0]
+        self.imu_offset=0
 
         self.vel_0 = 0
         self.vel_1 = 0
@@ -34,9 +35,9 @@ class ImuCustomNode(Node):
         self.ang_1=0
         self.ang_2=0
 
-        self.kp= -0.019211
-        self.ki= -0.00056694
-        self.kd= -0.013406
+        self.kp= 0.019211
+        self.ki= 0.00056694
+        self.kd= 0.013406
         self.ts=0.005   # periodo de amostragem
 
         self.erro_0=0
@@ -57,7 +58,7 @@ class ImuCustomNode(Node):
         """
         Publish the data
         """
-        self.erro_0=0+self.euler[0]
+        self.erro_0=0+self.euler[0]-self.imu_offset
         self.ang_1=0+self.euler[0]
         self.erro_sum += self.erro_0
 
@@ -121,6 +122,17 @@ def main(args=None):
     rclpy.init(args=args)
 
     imu_node = ImuCustomNode()
+
+    print("calibrating IMU offset")
+    count=0
+        while(imu_node.euler[0] == 0):
+            if(count>=1000):
+                print("calibrating IMU FAILED")
+                imu_node.destroy_node()
+                rclpy.shutdown()
+            imu_node.imu_offset=imu_node.euler[0]
+            count+=1
+    print(f'\nApplying IMU offset of {imu_node.imu_offset}\n')
 
     rclpy.spin(imu_node)
 
