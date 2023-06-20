@@ -34,6 +34,11 @@ class ImuCustomNode(Node):
         self.ang_1=0
         self.ang_2=0
 
+        self.kp= 0.019
+        self.ki= 0.00007
+        self.kd= 0.010406
+        self.ts=0.005   # periodo de amostragem
+
 
     def listener_callback(self, data):
         """
@@ -48,8 +53,8 @@ class ImuCustomNode(Node):
         Publish the data
         """
         self.ang_0=0+self.euler[0]
-
-        self.vel_0 = 1.368*self.vel_1 -0.3679*self.vel_2 +2.7*self.ang_0 -0.5389*self.ang_1 +2.688*self.ang_2
+        # eq(5) from https://engineering.stackexchange.com/questions/26537/what-is-a-definitive-discrete-pid-controller-equation
+        self.vel_0 = self.vel_1 + (self.kp + self.ki*self.ts/2 + self.kd/self.ts)*ang_0 + (-self.kp + self.ki*self.ts/2 -2*self.kd/self.ts)*self.ang_1 + (self.kd/self.ts)*self.ang_2
         print(self.vel_0)
 
 
@@ -66,11 +71,8 @@ class ImuCustomNode(Node):
         self.publisherController.publish(velocity)
 
         self.vel_1 = self.vel_0
-        self.vel_2 = self.vel_1
         self.ang_1=self.ang_0
         self.ang_2=self.ang_1
-
-        self.erro_1=self.erro_0
 
 
     def euler_from_quaternion(self, x, y, z, w):
