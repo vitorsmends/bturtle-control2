@@ -35,9 +35,9 @@ class ImuPidNode(Node):
         self.ang_1=0
         self.ang_2=0
 
-        self.kp= 0.019
-        self.ki= 0.00007
-        self.kd= 0.010406
+        self.kp= 0.015
+        self.ki= 0.000062 #0.00003
+        self.kd= 0.0010
         self.ts=0.005   # periodo de amostragem
 
 
@@ -55,7 +55,7 @@ class ImuPidNode(Node):
         """
         self.ang_0=0+self.euler[0]
         # eq(5) from https://engineering.stackexchange.com/questions/26537/what-is-a-definitive-discrete-pid-controller-equation
-        self.vel_0 = self.vel_1 + (self.kp + self.ki*self.ts/2 + self.kd/self.ts)*ang_0 + (-self.kp + self.ki*self.ts/2 -2*self.kd/self.ts)*self.ang_1 + (self.kd/self.ts)*self.ang_2
+        self.vel_0 = self.vel_1 + (self.kp + self.ki*self.ts/2 + self.kd/self.ts)*self.ang_0 + (-self.kp + self.ki*self.ts/2 -2*self.kd/self.ts)*self.ang_1 + (self.kd/self.ts)*self.ang_2
         print(self.vel_0)
 
 
@@ -72,8 +72,8 @@ class ImuPidNode(Node):
         self.publisherController.publish(velocity)
 
         self.vel_1 = self.vel_0
-        self.ang_1=self.ang_0
         self.ang_2=self.ang_1
+        self.ang_1=self.ang_0
 
 
     def euler_from_quaternion(self, x, y, z, w):
