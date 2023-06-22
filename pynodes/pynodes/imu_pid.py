@@ -54,10 +54,7 @@ class ImuPidNode(Node):
         Publish the data
         """
         self.ang_0=0+self.euler[0]
-        # eq(5) from https://engineering.stackexchange.com/questions/26537/what-is-a-definitive-discrete-pid-controller-equation
         self.vel_0 = self.vel_1 + (self.kp + self.ki*self.ts/2 + self.kd/self.ts)*self.ang_0 + (-self.kp + self.ki*self.ts/2 -2*self.kd/self.ts)*self.ang_1 + (self.kd/self.ts)*self.ang_2
-        print(self.vel_0)
-
 
         # limite de saturacao do motor
         if self.vel_0 > self.max_vel:
